@@ -6,7 +6,7 @@ export interface Task {
   id: string;
   taskId: number;
   taskName: string;
-  resourceNames: string;
+  resourceNames: string | null;
   duration: number;
   startDate: string;
   endDate: string;

@@ -19,7 +19,7 @@ export function parseExcelFile(buffer: Buffer, maxTasks: number = 500): ParseRes
     }
 
     const worksheet = workbook.Sheets[sheetName];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as unknown[][];
 
     if (jsonData.length < 2) {
       result.errors.push('File must contain at least a header row and one data row');
@@ -30,7 +30,7 @@ export function parseExcelFile(buffer: Buffer, maxTasks: number = 500): ParseRes
     let headerRowIndex = 0;
     for (let i = 0; i < Math.min(jsonData.length, 5); i++) {
       const row = jsonData[i];
-      if (row && row.some((cell: any) => 
+      if (row && row.some((cell: unknown) => 
         typeof cell === 'string' && (cell.includes('Task') || cell.includes('ID'))
       )) {
         headerRowIndex = i;
@@ -38,7 +38,7 @@ export function parseExcelFile(buffer: Buffer, maxTasks: number = 500): ParseRes
       }
     }
 
-    const headers = jsonData[headerRowIndex].map((h: any) => String(h).trim().toLowerCase());
+    const headers = (jsonData[headerRowIndex] as unknown[]).map((h: unknown) => String(h || '').trim().toLowerCase());
     
     // Map column indices
     const colMap: Record<string, number> = {};
@@ -69,7 +69,7 @@ export function parseExcelFile(buffer: Buffer, maxTasks: number = 500): ParseRes
       if (!row || row.length === 0) continue; // Skip empty rows
 
       // Skip if all cells are empty
-      if (row.every((cell: any) => cell === undefined || cell === null || String(cell).trim() === '')) {
+      if (row.every((cell: unknown) => cell === undefined || cell === null || String(cell).trim() === '')) {
         continue;
       }
 

@@ -13,10 +13,12 @@ const TEMPLATES = [
   { id: "warm-ivory", label: "Warm Ivory", bg: "#3d4a2e", text: "#f0ead8" },
 ];
 
+import { Project, Task } from "@/types";
+
 export default function ProjectPage() {
   const { id } = useParams();
-  const [project, setProject] = useState<any>(null);
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [project, setProject] = useState<Project | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [zoom, setZoom] = useState(1);
   const [template, setTemplate] = useState("slate-pro");
@@ -25,17 +27,18 @@ export default function ProjectPage() {
 
   useEffect(() => {
     // First try to get data from localStorage (for uploaded files)
-    const localProjects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const localProject = localProjects.find((p: any) => p.id === id);
+    const projectId = Array.isArray(id) ? id[0] : id;
+    const localProjects: Project[] = JSON.parse(localStorage.getItem('projects') || '[]');
+    const localProject = localProjects.find((p: Project) => p.id === projectId);
     
     if (localProject) {
       setProject(localProject);
       const localTasks = JSON.parse(localStorage.getItem('tasks') || '{}');
-      setTasks(localTasks[id] || []);
+      setTasks(localTasks[projectId as string] || []);
       setLoading(false);
     } else {
       // Fall back to API
-      fetch(`/api/projects/${id}`)
+      fetch(`/api/projects/${projectId}`)
         .then(r => r.json())
         .then(data => {
           setProject(data.project);

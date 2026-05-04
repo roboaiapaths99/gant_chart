@@ -8,13 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Plus, FolderOpen, Calendar, TrendingUp, Crown } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
-interface Project {
-  id: string;
-  name: string;
-  description: string | null;
-  createdAt: string;
-  _count: { tasks: number };
-}
+import { Project } from '@/types';
 
 export default function ProjectsPage() {
   const router = useRouter();
@@ -123,7 +117,9 @@ export default function ProjectsPage() {
                   </p>
                 )}
                 <div className="flex items-center justify-between text-sm text-gray-500 font-medium mb-4">
-                  <span className="bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1 rounded-full">{project._count?.tasks || project.tasks?.length || 0} tasks</span>
+                  <span className="bg-gradient-to-r from-blue-50 to-purple-50 px-3 py-1 rounded-full">
+                    {project._count?.tasks ?? project.tasks?.length ?? 0} tasks
+                  </span>
                   <span>
                     {new Date(project.createdAt).toLocaleDateString()}
                   </span>

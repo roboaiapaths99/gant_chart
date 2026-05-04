@@ -71,7 +71,15 @@ export default function AnalyticsPage() {
     { date: 'May 1', completed: 65, inProgress: 28, notStarted: 5, total: 98 }
   ];
 
-  const StatCard = ({ title, value, change, icon: Icon, color }: any) => (
+  interface StatCardProps {
+    title: string;
+    value: string | number;
+    change?: number;
+    icon: any;
+    color: string;
+  }
+
+  const StatCard = ({ title, value, change, icon: Icon, color }: StatCardProps) => (
     <Card>
       <CardContent className="p-6">
         <div className="flex items-center justify-between">

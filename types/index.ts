@@ -17,6 +17,9 @@ export interface Project {
   createdAt: Date;
   updatedAt: Date;
   tasks: Task[];
+  _count?: {
+    tasks: number;
+  };
 }
 
 export interface Task {
