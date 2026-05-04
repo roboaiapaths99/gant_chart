@@ -23,7 +23,9 @@ export function getColorForResource(resourceName: string): string {
   return COLOR_PALETTE[hash % COLOR_PALETTE.length];
 }
 
-export function getTaskColor(task: any, defaultColor?: string): string {
+import { Task } from '@/types';
+
+export function getTaskColor(task: Partial<Task>, defaultColor?: string): string {
   if (defaultColor) return defaultColor;
   if (task.resourceNames) {
     return getColorForResource(task.resourceNames);

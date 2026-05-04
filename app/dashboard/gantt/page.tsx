@@ -5,7 +5,17 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Plus, Download, Calendar, Search, Maximize2, Minimize2, BarChart3, Clock, Users } from 'lucide-react';
-import GanttChart from '@/components/gantt/GanttChart';
+import GanttChart, { Task } from '@/components/gantt/GanttChart';
+
+interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  _count?: {
+    tasks: number;
+  };
+  progress?: number;
+}
 
 const TEMPLATES = [
   { id: "dark-forest", label: "Dark Forest", bg: "#1a2e1a", text: "#e8f0e8" },
@@ -15,9 +25,9 @@ const TEMPLATES = [
 ];
 
 // Inline mock tasks to ensure the page works immediately
-const mockTasks = [
+const mockTasks: Task[] = [
   {
-    id: 1,
+    id: '1',
     taskId: 1,
     taskName: 'Site Preparation',
     duration: 5,
@@ -28,7 +38,7 @@ const mockTasks = [
     progress: 100
   },
   {
-    id: 2,
+    id: '2',
     taskId: 2,
     taskName: 'Foundation Work',
     duration: 10,
@@ -39,7 +49,7 @@ const mockTasks = [
     progress: 85
   },
   {
-    id: 3,
+    id: '3',
     taskId: 3,
     taskName: 'Steel Installation',
     duration: 8,
@@ -50,7 +60,7 @@ const mockTasks = [
     progress: 60
   },
   {
-    id: 4,
+    id: '4',
     taskId: 4,
     taskName: 'Concrete Pouring',
     duration: 6,
@@ -61,7 +71,7 @@ const mockTasks = [
     progress: 40
   },
   {
-    id: 5,
+    id: '5',
     taskId: 5,
     taskName: 'Formwork Setup',
     duration: 7,
@@ -72,7 +82,7 @@ const mockTasks = [
     progress: 25
   },
   {
-    id: 6,
+    id: '6',
     taskId: 6,
     taskName: 'Quality Inspection',
     duration: 3,
@@ -83,7 +93,7 @@ const mockTasks = [
     progress: 0
   },
   {
-    id: 7,
+    id: '7',
     taskId: 7,
     taskName: 'Final Finishing',
     duration: 5,
@@ -94,7 +104,7 @@ const mockTasks = [
     progress: 0
   },
   {
-    id: 8,
+    id: '8',
     taskId: 8,
     taskName: 'Project Handover',
     duration: 2,
@@ -108,9 +118,9 @@ const mockTasks = [
 
 export default function GanttViewPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [projects, setProjects] = useState<any[]>([]);
-  const [selectedProject, setSelectedProject] = useState<any>(null);
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [template, setTemplate] = useState("slate-pro");
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -133,7 +143,7 @@ export default function GanttViewPage() {
     setIsFullscreen(!isFullscreen);
   };
 
-  const handleProjectSelect = (project: any) => {
+  const handleProjectSelect = (project: Project) => {
     setSelectedProject(project);
     const localTasks = JSON.parse(localStorage.getItem('tasks') || '{}');
     setTasks(localTasks[project.id] || mockTasks);
@@ -151,9 +161,9 @@ export default function GanttViewPage() {
   });
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 min-w-[1200px]">
+    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Project Sidebar */}
-      <div className="w-80 bg-white/80 backdrop-blur-xl border-r border-gray-200/50 overflow-y-auto min-w-[320px]">
+      <div className="w-full lg:w-80 bg-white/80 backdrop-blur-xl border-r border-gray-200/50 overflow-y-auto">
         <div className="p-6 border-b border-gray-200/50">
           <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Your Projects
@@ -218,7 +228,7 @@ export default function GanttViewPage() {
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
         <div className={`bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-8 py-4 shadow-xl transition-all duration-300 ${isFullscreen ? 'h-0 overflow-hidden p-0 border-0' : ''}`}>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
               <Link href="/dashboard">
                 <Button variant="outline" size="sm" className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200/50 hover:shadow-lg transition-all">
@@ -235,7 +245,7 @@ export default function GanttViewPage() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center flex-wrap gap-3">
               {TEMPLATES.map(tpl => (
                 <button
                   key={tpl.id}

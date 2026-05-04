@@ -17,7 +17,7 @@ export default function NewProjectPage() {
   const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [previewData, setPreviewData] = useState<any[] | null>(null);
+  const [previewData, setPreviewData] = useState<(string | number | boolean | null)[][] | null>(null);
   const [loading, setLoading] = useState(false);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -274,19 +274,19 @@ export default function NewProjectPage() {
                 <table className="w-full text-sm border border-gray-200/50 rounded-xl overflow-hidden">
                   <thead>
                     <tr className="bg-gradient-to-r from-blue-50 to-purple-50">
-                      {previewData[0]?.map((header: any, idx: number) => (
+                      {previewData[0]?.map((header, idx: number) => (
                         <th key={idx} className="px-4 py-3 text-left border border-gray-200/50 font-bold text-gray-900">
-                          {header}
+                          {String(header)}
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {previewData.slice(1).map((row: any, rowIdx: number) => (
+                    {previewData.slice(1).map((row, rowIdx: number) => (
                       <tr key={rowIdx} className="border-t border-gray-200/50 hover:bg-gradient-to-r from-gray-50 to-blue-50 transition-all">
-                        {row.map((cell: any, cellIdx: number) => (
+                        {row.map((cell, cellIdx: number) => (
                           <td key={cellIdx} className="px-4 py-3 border border-gray-200/50 text-gray-700 font-medium">
-                            {cell || '-'}
+                            {cell !== null ? String(cell) : '-'}
                           </td>
                         ))}
                       </tr>

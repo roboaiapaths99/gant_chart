@@ -18,6 +18,8 @@ import {
   ChevronUp
 } from 'lucide-react';
 
+import { Project, User } from '@/types';
+
 interface FilterOptions {
   searchTerm: string;
   status: string[];
@@ -30,8 +32,8 @@ interface FilterOptions {
 
 interface AdvancedFilterProps {
   onFilterChange: (filters: FilterOptions) => void;
-  projects: any[];
-  users: any[];
+  projects: Project[];
+  users: User[];
 }
 
 export function AdvancedFilter({ onFilterChange, projects, users }: AdvancedFilterProps) {
@@ -50,7 +52,7 @@ export function AdvancedFilter({ onFilterChange, projects, users }: AdvancedFilt
   const budgetRanges = ['0-1M', '1M-5M', '5M-10M', '10M+'];
   const priorities = ['high', 'medium', 'low'];
 
-  const handleFilterUpdate = (key: keyof FilterOptions, value: any) => {
+  const handleFilterUpdate = (key: keyof FilterOptions, value: string | string[]) => {
     const newFilters = { ...filters, [key]: value };
     setFilters(newFilters);
     onFilterChange(newFilters);
@@ -227,7 +229,7 @@ export function AdvancedFilter({ onFilterChange, projects, users }: AdvancedFilt
                   }`}
                 >
                   <Users className="h-3 w-3" />
-                  {user.name.split(' ')[0]}
+                  {(user.name || 'User').split(' ')[0]}
                 </button>
               ))}
             </div>

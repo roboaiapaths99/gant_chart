@@ -23,9 +23,9 @@ const COLORS = [
 ];
 
 export function ResourceUtilizationChart({ data }: ResourceUtilizationChartProps) {
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: any[] }) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;
+      const data = payload[0].payload as ResourceData;
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="font-medium text-gray-900">{data.name}</p>
@@ -39,6 +39,9 @@ export function ResourceUtilizationChart({ data }: ResourceUtilizationChartProps
   };
 
   const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+    if (cx === undefined || cy === undefined || midAngle === undefined || innerRadius === undefined || outerRadius === undefined || percent === undefined) {
+      return null;
+    }
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -82,7 +85,7 @@ export function ResourceUtilizationChart({ data }: ResourceUtilizationChartProps
           <Legend 
             verticalAlign="bottom" 
             height={36}
-            formatter={(value, entry: any) => (
+            formatter={(value: string, entry: any) => (
               <span className="text-sm">{value} ({entry.payload.utilization}%)</span>
             )}
           />

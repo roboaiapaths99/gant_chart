@@ -429,7 +429,7 @@ export default function GanttChart({ tasks, template = "slate-pro", onTaskClick 
 
       {/* Task detail slide-over */}
       {selectedTask && (
-        <div className="fixed right-0 top-0 h-full w-96 shadow-2xl border-l z-50 overflow-y-auto animate-in slide-in-from-right duration-300" style={{
+        <div className="fixed right-0 top-0 h-full w-full sm:w-96 shadow-2xl border-l z-50 overflow-y-auto animate-in slide-in-from-right duration-300" style={{
           background: currentTheme.background,
           borderColor: currentTheme.border
         }}>

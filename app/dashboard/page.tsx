@@ -51,9 +51,21 @@ const recentActivities = [
   { id: 4, action: 'Team member added', project: 'Website Redesign', time: '2 days ago', user: 'Sarah Wilson' }
 ];
 
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  _count: {
+    tasks: number;
+  };
+  progress: number;
+  status: string;
+}
+
 export default function DashboardPage() {
   // Get projects from localStorage or use defaults
-  const [projects, setProjects] = useState(defaultProjects);
+  const [projects, setProjects] = useState<Project[]>(defaultProjects);
   const [isFullscreen, setIsFullscreen] = useState(false);
   
   useEffect(() => {
@@ -74,14 +86,16 @@ export default function DashboardPage() {
   const team = mockTeam;
   const activities = recentActivities;
 
-  const totalTasks = projects.reduce((sum, p) => sum + p._count.tasks, 0);
-  const avgProgress = Math.round(projects.reduce((sum, p) => sum + p.progress, 0) / projects.length);
+  const totalTasks = projects.reduce((sum, p) => sum + (p._count?.tasks || 0), 0);
+  const avgProgress = projects.length > 0 
+    ? Math.round(projects.reduce((sum, p) => sum + (p.progress || 0), 0) / projects.length)
+    : 0;
   const activeProjects = projects.filter(p => p.status === 'active').length;
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 min-w-[1200px]">
+    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Sidebar */}
-      <div className={`bg-white/80 backdrop-blur-xl border-r border-gray-200/50 transition-all duration-300 min-w-[240px] ${isFullscreen ? 'w-0 overflow-hidden' : 'w-64'}`}>
+      <div className={`bg-white/80 backdrop-blur-xl border-r border-gray-200/50 transition-all duration-300 ${isFullscreen ? 'w-0 overflow-hidden' : 'w-full lg:w-64'}`}>
         <div className="p-6 border-b border-gray-200/50">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
@@ -151,7 +165,7 @@ export default function DashboardPage() {
       <div className="flex-1 overflow-y-auto">
         <div className="p-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">Welcome back!</h1>
               <p className="text-gray-600 mt-2 text-lg">Here's what's happening with your projects</p>
@@ -177,7 +191,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white/80 backdrop-blur-xl p-6 rounded-2xl border border-gray-200/50 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">
               <div className="flex items-center justify-between">
                 <div>
@@ -227,7 +241,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Projects Section */}
             <div className="col-span-2">
               <Card className="p-6 bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-xl">
@@ -237,7 +251,7 @@ export default function DashboardPage() {
                     <Button variant="outline" size="sm" className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200/50 hover:shadow-lg transition-all">View All</Button>
                   </Link>
                 </div>
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {projects.map((project) => (
                     <div key={project.id} className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border border-gray-200/50">
                       <div className="flex items-start justify-between mb-4">

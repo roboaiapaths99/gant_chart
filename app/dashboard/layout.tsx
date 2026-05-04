@@ -11,11 +11,11 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white border-b px-6 py-4">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
             <div className="text-2xl font-bold text-blue-600">
               GanttFlow
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
               <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">Dashboard</Link>
               <Link href="/dashboard/projects" className="text-gray-600 hover:text-gray-900">Projects</Link>
               <Link href="/dashboard/gantt" className="text-gray-600 hover:text-gray-900">Gantt View</Link>

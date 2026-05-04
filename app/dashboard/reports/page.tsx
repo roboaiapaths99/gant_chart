@@ -19,7 +19,6 @@ import {
   TrendingUp,
   FileSpreadsheet,
   FileImage,
-  FileText,
   Mail,
   Share2,
   Clock,
@@ -30,8 +29,27 @@ import {
   Loader2
 } from 'lucide-react';
 
+interface ReportSummary {
+  overallProgress: number;
+  tasksCompleted: number;
+  tasksInProgress: number;
+  budgetUsed: number;
+  issues: number;
+}
+
+interface Report {
+  id: string;
+  name: string;
+  type: string;
+  generatedAt: string;
+  status: 'completed' | 'generating' | 'failed' | string;
+  summary: ReportSummary;
+  fileUrl: string;
+  fileSize: string;
+}
+
 // Mock data
-const mockReports = [
+const mockReports: Report[] = [
   {
     id: '1',
     name: 'Q4 2024 Progress Report',
@@ -137,21 +155,21 @@ export default function ReportsPage() {
     });
   };
 
-  const handleDownloadReport = (report: any) => {
+  const handleDownloadReport = (report: Report) => {
     toast({
       title: 'Download Started',
       description: `Downloading ${report.name}`,
     });
   };
 
-  const handleShareReport = (report: any) => {
+  const handleShareReport = (report: Report) => {
     toast({
       title: 'Report Shared',
       description: `Report has been shared successfully`,
     });
   };
 
-  const handleEmailReport = (report: any) => {
+  const handleEmailReport = (report: Report) => {
     if (!emailRecipient) {
       toast({
         variant: 'destructive',
