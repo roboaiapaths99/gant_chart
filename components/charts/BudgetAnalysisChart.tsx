@@ -14,7 +14,7 @@ interface BudgetAnalysisChartProps {
 }
 
 export function BudgetAnalysisChart({ data }: BudgetAnalysisChartProps) {
-  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: any[]; label?: string }) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: { color: string; name: string; value: number }[]; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">

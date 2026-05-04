@@ -201,7 +201,7 @@ export default function ProjectPage() {
             </div>
           </div>
         ) : (
-          <GanttChart tasks={tasks} template={template as any} />
+          <GanttChart tasks={tasks} template={template} />
         )}
       </div>
 

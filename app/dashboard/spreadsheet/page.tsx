@@ -112,14 +112,13 @@ export default function SpreadsheetPage() {
       localStorage.setItem('projects', JSON.stringify(existingProjects));
       
       // Store tasks separately
-      const existingTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+      const existingTasks = JSON.parse(localStorage.getItem('tasks') || '{}');
       const newTasks = projectData.tasks.map((task, index) => ({
-        id: task.id,
-        projectId: newProject.id,
         ...task,
+        projectId: newProject.id,
         createdAt: new Date().toISOString()
       }));
-      existingTasks.push(...newTasks);
+      existingTasks[newProject.id] = newTasks;
       localStorage.setItem('tasks', JSON.stringify(existingTasks));
       
       setSavedStatus('success');

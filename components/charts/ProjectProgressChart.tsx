@@ -28,7 +28,7 @@ const STATUS_COLORS = {
 };
 
 export function ProjectProgressChart({ data }: ProjectProgressChartProps) {
-  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: any[] }) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { payload: ProjectProgressData }[] }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ProjectProgressData;
       return (

@@ -8,10 +8,11 @@ export interface Task {
   taskName: string;
   resourceNames: string | null;
   duration: number;
-  startDate: string;
-  endDate: string;
-  predecessors: string;
+  startDate: string | Date;
+  endDate: string | Date;
+  predecessors: string | null;
   progress: number;
+  [key: string]: any; // Allow extra properties from global Task
 }
 
 export interface Props {
@@ -233,13 +234,13 @@ export default function GanttChart({ tasks, template = "slate-pro", onTaskClick 
   const maxDate = new Date(Math.max(...allDates.map(d => d.getTime())));
   const totalDays = Math.ceil((maxDate.getTime() - minDate.getTime()) / (1000*60*60*24)) + 1;
   
-  const getLeft = (date: string) => {
+  const getLeft = (date: string | Date) => {
     const d = new Date(date);
     const days = Math.ceil((d.getTime() - minDate.getTime()) / (1000*60*60*24));
     return (days / totalDays) * 100;
   };
   
-  const getWidth = (start: string, end: string) => {
+  const getWidth = (start: string | Date, end: string | Date) => {
     const s = new Date(start), e = new Date(end);
     const days = Math.ceil((e.getTime() - s.getTime()) / (1000*60*60*24)) + 1;
     return Math.max((days / totalDays) * 100, 1);
@@ -319,9 +320,9 @@ export default function GanttChart({ tasks, template = "slate-pro", onTaskClick 
                   borderColor: currentTheme.border,
                   backgroundColor: i % 2 === 0 ? "transparent" : currentTheme.gridBg
                 }}>
-                  <span className="inline-flex items-center gap-2 text-xs font-semibold" style={{ color: RESOURCE_COLORS[task.resourceNames] || currentTheme.text }}>
-                    <span className="w-2.5 h-2.5 rounded-full inline-block shadow-sm" style={{ background: RESOURCE_COLORS[task.resourceNames] || currentTheme.text }}></span>
-                    {task.resourceNames}
+                  <span className="inline-flex items-center gap-2 text-xs font-semibold" style={{ color: (task.resourceNames && RESOURCE_COLORS[task.resourceNames]) || currentTheme.text }}>
+                    <span className="w-2.5 h-2.5 rounded-full inline-block shadow-sm" style={{ background: (task.resourceNames && RESOURCE_COLORS[task.resourceNames]) || currentTheme.text }}></span>
+                    {task.resourceNames || 'Unassigned'}
                   </span>
                 </div>
               ))}

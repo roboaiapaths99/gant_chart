@@ -14,8 +14,8 @@ export interface Project {
   fileUrl: string | null;
   shareToken: string | null;
   isPublic: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
   tasks: Task[];
   _count?: {
     tasks: number;
@@ -28,13 +28,13 @@ export interface Task {
   taskId: number;
   taskName: string;
   duration: number;
-  startDate: Date;
-  endDate: Date;
+  startDate: string | Date;
+  endDate: string | Date;
   predecessors: string | null;
   resourceNames: string | null;
   progress: number;
   color: string | null;
-  createdAt: Date;
+  createdAt: string | Date;
 }
 
 export interface ParsedTask {

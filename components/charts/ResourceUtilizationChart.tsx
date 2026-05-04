@@ -23,7 +23,7 @@ const COLORS = [
 ];
 
 export function ResourceUtilizationChart({ data }: ResourceUtilizationChartProps) {
-  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: any[] }) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: { payload: ResourceData }[] }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload as ResourceData;
       return (
@@ -38,10 +38,17 @@ export function ResourceUtilizationChart({ data }: ResourceUtilizationChartProps
     return null;
   };
 
+  interface PieLabelProps {
+    cx: number;
+    cy: number;
+    midAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    percent: number;
+    index: number;
+  }
+
   const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
-    if (cx === undefined || cy === undefined || midAngle === undefined || innerRadius === undefined || outerRadius === undefined || percent === undefined) {
-      return null;
-    }
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -56,7 +63,7 @@ export function ResourceUtilizationChart({ data }: ResourceUtilizationChartProps
         fill="white" 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
-        className="text-sm font-medium"
+        className="text-[10px] font-bold"
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -86,7 +93,7 @@ export function ResourceUtilizationChart({ data }: ResourceUtilizationChartProps
             verticalAlign="bottom" 
             height={36}
             formatter={(value: string, entry: any) => (
-              <span className="text-sm">{value} ({entry.payload.utilization}%)</span>
+              <span className="text-xs font-medium text-gray-600">{value} ({entry.payload?.utilization || 0}%)</span>
             )}
           />
         </PieChart>

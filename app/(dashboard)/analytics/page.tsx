@@ -75,7 +75,7 @@ export default function AnalyticsPage() {
     title: string;
     value: string | number;
     change?: number;
-    icon: any;
+    icon: React.ElementType | any;
     color: string;
   }
 
