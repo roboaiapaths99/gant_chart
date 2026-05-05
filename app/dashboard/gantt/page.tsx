@@ -161,9 +161,9 @@ export default function GanttViewPage() {
   });
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Project Sidebar */}
-      <div className="w-full lg:w-80 bg-white/80 backdrop-blur-xl border-r border-gray-200/50 overflow-y-auto">
+      <div className="w-full lg:w-80 bg-white/80 backdrop-blur-xl border-r border-gray-200/50 overflow-y-auto lg:h-screen">
         <div className="p-6 border-b border-gray-200/50">
           <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Your Projects
@@ -227,7 +227,7 @@ export default function GanttViewPage() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        <div className={`bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-8 py-4 shadow-xl transition-all duration-300 ${isFullscreen ? 'h-0 overflow-hidden p-0 border-0' : ''}`}>
+        <div className={`bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-4 md:px-8 py-4 shadow-xl transition-all duration-300 ${isFullscreen ? 'h-0 overflow-hidden p-0 border-0' : ''}`}>
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
               <Link href="/dashboard">
@@ -303,7 +303,7 @@ export default function GanttViewPage() {
           </div>
         )}
 
-        <div className="p-6">
+        <div className="p-4 md:p-6">
           <Card className="bg-white/80 backdrop-blur-xl border border-gray-200/50 shadow-xl p-4 mb-6">
             <div className="flex items-center space-x-4">
               <div className="flex-1">

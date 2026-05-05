@@ -93,9 +93,9 @@ export default function DashboardPage() {
   const activeProjects = projects.filter(p => p.status === 'active').length;
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Sidebar */}
-      <div className={`bg-white/80 backdrop-blur-xl border-r border-gray-200/50 transition-all duration-300 ${isFullscreen ? 'w-0 overflow-hidden' : 'w-full lg:w-64'}`}>
+      <div className={`bg-white/80 backdrop-blur-xl border-r border-gray-200/50 transition-all duration-300 ${isFullscreen ? 'h-0 lg:h-auto w-0 overflow-hidden' : 'w-full lg:w-64'}`}>
         <div className="p-6 border-b border-gray-200/50">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
@@ -108,7 +108,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto max-h-[50vh] lg:max-h-full">
           <Link href="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all">
             <Target className="h-5 w-5" />
             <span>Dashboard</span>
@@ -163,7 +163,7 @@ export default function DashboardPage() {
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="p-8">
+        <div className="p-4 md:p-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
             <div>

@@ -22,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="viewport" content="width=1200, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className={`${inter.className} min-w-[1200px] overflow-x-auto`}>
+      <body className={`${inter.className} min-h-screen antialiased`}>
         <AppProvider>
           {children}
         </AppProvider>
