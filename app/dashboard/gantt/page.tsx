@@ -39,14 +39,19 @@ export default function GanttViewPage() {
         const res = await fetch('/api/projects');
         if (res.ok) {
           const data = await res.json();
-          setProjects(data);
-          
-          if (data.length > 0) {
-            setSelectedProject(data[0]);
-            const tasksRes = await fetch(`/api/projects/${data[0].id}`);
-            if (tasksRes.ok) {
-              const projectData = await tasksRes.json();
-              setTasks(projectData.tasks || []);
+          if (data.success && Array.isArray(data.projects)) {
+            setProjects(data.projects);
+            
+            if (data.projects.length > 0) {
+              const firstProject = data.projects[0];
+              setSelectedProject(firstProject);
+              const tasksRes = await fetch(`/api/projects/${firstProject.id}`);
+              if (tasksRes.ok) {
+                const projectData = await tasksRes.json();
+                if (projectData.success && projectData.project) {
+                  setTasks(projectData.project.tasks || []);
+                }
+              }
             }
           }
         }
@@ -68,7 +73,9 @@ export default function GanttViewPage() {
       const res = await fetch(`/api/projects/${project.id}`);
       if (res.ok) {
         const projectData = await res.json();
-        setTasks(projectData.tasks || []);
+        if (projectData.success && projectData.project) {
+          setTasks(projectData.project.tasks || []);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch tasks", error);

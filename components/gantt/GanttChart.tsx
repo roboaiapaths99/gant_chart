@@ -215,7 +215,7 @@ export default function GanttChart({ tasks, template = "slate-pro", onTaskClick 
   const [hoveredTask, setHoveredTask] = useState<Task | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  const currentTheme = THEME_TEMPLATES[template];
+  const currentTheme = THEME_TEMPLATES[template] || THEME_TEMPLATES["slate-pro"];
 
   if (!tasks || tasks.length === 0) {
     return (
@@ -246,7 +246,8 @@ export default function GanttChart({ tasks, template = "slate-pro", onTaskClick 
     return Math.max((days / totalDays) * 100, 1);
   };
 
-  const todayPct = ((new Date().getTime() - minDate.getTime()) / (maxDate.getTime() - minDate.getTime())) * 100;
+  const diff = maxDate.getTime() - minDate.getTime();
+  const todayPct = diff <= 0 ? 0 : ((new Date().getTime() - minDate.getTime()) / diff) * 100;
 
   const months: string[] = [];
   const cur = new Date(minDate);
