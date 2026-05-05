@@ -156,7 +156,7 @@ export default function GanttViewPage() {
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch = task.taskName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         task.resourceNames.toLowerCase().includes(searchTerm.toLowerCase());
+                         (task.resourceNames || '').toLowerCase().includes(searchTerm.toLowerCase());
     return matchesSearch;
   });
 

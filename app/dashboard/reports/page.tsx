@@ -205,11 +205,11 @@ export default function ReportsPage() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       <div className="flex-1 overflow-y-auto">
         {/* Header */}
-        <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-8 py-4 shadow-xl">
-          <div className="flex items-center justify-between">
+        <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-4 md:px-8 py-4 shadow-xl">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center space-x-4">
               <Link href="/dashboard">
                 <Button variant="outline" size="sm" className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200/50 hover:shadow-lg transition-all">
@@ -239,7 +239,7 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        <div className="p-8">
+        <div className="p-4 md:p-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Report Generation */}
             <div className="lg:col-span-2">
