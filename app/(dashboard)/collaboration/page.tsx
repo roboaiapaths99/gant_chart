@@ -30,14 +30,21 @@ export default function CollaborationPage() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [shareLink, setShareLink] = useState('');
   const [isPublic, setIsPublic] = useState(false);
+  const [origin, setOrigin] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
   const handleShareProject = (projectId: string) => {
     const project = projects.find(p => p.id === projectId);
     if (project) {
       setSelectedProject(projectId);
       setIsPublic(project.isPublic);
-      if (project.shareToken) {
-        setShareLink(`${window.location.origin}/share/${project.shareToken}`);
+      if (project.shareToken && origin) {
+        setShareLink(`${origin}/share/${project.shareToken}`);
       }
     }
   };
@@ -60,7 +67,9 @@ export default function CollaborationPage() {
         setProjects(prev => prev.map(p => 
           p.id === projectId ? { ...p, shareToken } : p
         ));
-        setShareLink(`${window.location.origin}/share/${shareToken}`);
+        if (origin) {
+          setShareLink(`${origin}/share/${shareToken}`);
+        }
       }
       
       toast({
@@ -147,7 +156,7 @@ export default function CollaborationPage() {
                         <div className="flex items-center gap-2 mt-2">
                           <Link className="h-4 w-4 text-gray-400" />
                           <span className="text-sm text-gray-500">
-                            {window.location.origin}/share/{project.shareToken}
+                            {origin}/share/{project.shareToken}
                           </span>
                         </div>
                       )}
