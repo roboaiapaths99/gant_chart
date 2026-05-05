@@ -24,97 +24,6 @@ const TEMPLATES = [
   { id: "warm-ivory", label: "Warm Ivory", bg: "#3d4a2e", text: "#f0ead8" },
 ];
 
-// Inline mock tasks to ensure the page works immediately
-const mockTasks: Task[] = [
-  {
-    id: '1',
-    taskId: 1,
-    taskName: 'Site Preparation',
-    duration: 5,
-    startDate: '2024-01-15',
-    endDate: '2024-01-20',
-    predecessors: '',
-    resourceNames: 'Civil Crew',
-    progress: 100
-  },
-  {
-    id: '2',
-    taskId: 2,
-    taskName: 'Foundation Work',
-    duration: 10,
-    startDate: '2024-01-21',
-    endDate: '2024-01-31',
-    predecessors: '1',
-    resourceNames: 'Steel fixers',
-    progress: 85
-  },
-  {
-    id: '3',
-    taskId: 3,
-    taskName: 'Steel Installation',
-    duration: 8,
-    startDate: '2024-02-01',
-    endDate: '2024-02-09',
-    predecessors: '2',
-    resourceNames: 'Steel fixers',
-    progress: 60
-  },
-  {
-    id: '4',
-    taskId: 4,
-    taskName: 'Concrete Pouring',
-    duration: 6,
-    startDate: '2024-02-10',
-    endDate: '2024-02-16',
-    predecessors: '3',
-    resourceNames: 'Concrete team',
-    progress: 40
-  },
-  {
-    id: '5',
-    taskId: 5,
-    taskName: 'Formwork Setup',
-    duration: 7,
-    startDate: '2024-02-17',
-    endDate: '2024-02-24',
-    predecessors: '4',
-    resourceNames: 'Formwork+Steel fixer',
-    progress: 25
-  },
-  {
-    id: '6',
-    taskId: 6,
-    taskName: 'Quality Inspection',
-    duration: 3,
-    startDate: '2024-02-25',
-    endDate: '2024-02-28',
-    predecessors: '5',
-    resourceNames: 'Management',
-    progress: 0
-  },
-  {
-    id: '7',
-    taskId: 7,
-    taskName: 'Final Finishing',
-    duration: 5,
-    startDate: '2024-03-01',
-    endDate: '2024-03-06',
-    predecessors: '6',
-    resourceNames: 'Civil Crew',
-    progress: 0
-  },
-  {
-    id: '8',
-    taskId: 8,
-    taskName: 'Project Handover',
-    duration: 2,
-    startDate: '2024-03-07',
-    endDate: '2024-03-09',
-    predecessors: '7',
-    resourceNames: 'Management',
-    progress: 0
-  }
-];
 
 export default function GanttViewPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -125,28 +34,45 @@ export default function GanttViewPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
-    // Load projects from localStorage
-    const localProjects = JSON.parse(localStorage.getItem('projects') || '[]');
-    setProjects(localProjects);
+    const fetchProjectsAndTasks = async () => {
+      try {
+        const res = await fetch('/api/projects');
+        if (res.ok) {
+          const data = await res.json();
+          setProjects(data);
+          
+          if (data.length > 0) {
+            setSelectedProject(data[0]);
+            const tasksRes = await fetch(`/api/projects/${data[0].id}`);
+            if (tasksRes.ok) {
+              const projectData = await tasksRes.json();
+              setTasks(projectData.tasks || []);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch projects", error);
+      }
+    };
     
-    // Load tasks from localStorage
-    const localTasks = JSON.parse(localStorage.getItem('tasks') || '{}');
-    if (localProjects.length > 0) {
-      setTasks(localTasks[localProjects[0].id] || mockTasks);
-      setSelectedProject(localProjects[0]);
-    } else {
-      setTasks(mockTasks);
-    }
+    fetchProjectsAndTasks();
   }, []);
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
   };
 
-  const handleProjectSelect = (project: Project) => {
+  const handleProjectSelect = async (project: Project) => {
     setSelectedProject(project);
-    const localTasks = JSON.parse(localStorage.getItem('tasks') || '{}');
-    setTasks(localTasks[project.id] || mockTasks);
+    try {
+      const res = await fetch(`/api/projects/${project.id}`);
+      if (res.ok) {
+        const projectData = await res.json();
+        setTasks(projectData.tasks || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch tasks", error);
+    }
   };
 
   const filteredProjects = projects.filter((project) => {

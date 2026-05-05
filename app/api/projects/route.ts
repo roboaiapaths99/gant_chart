@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { mockProjects } from '@/lib/mock-data';
 
 export async function GET(req: NextRequest) {
   try {
-    // Check if database is available
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-    } catch (dbError) {
-      console.log('Database not available, returning fallback data');
-      // Return comprehensive mock data when database is not available
-      return NextResponse.json({ success: true, projects: mockProjects });
-    }
-
     const projects = await prisma.project.findMany({
       include: {
         _count: {
@@ -35,22 +25,13 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, description } = body;
+    const { name, description, budget, status, progress } = body;
 
     if (!name) {
       return NextResponse.json(
         { success: false, error: 'Project name is required' },
         { status: 400 }
       );
-    }
-
-    // Check if database is available
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-    } catch (dbError) {
-      console.log('Database not available, returning fallback project');
-      // Return comprehensive mock data when database is not available
-      return NextResponse.json({ success: true, projects: mockProjects });
     }
 
     // Get or create a default user
@@ -70,6 +51,9 @@ export async function POST(req: NextRequest) {
         name,
         description: description || null,
         userId: user.id,
+        budget: budget || 0,
+        status: status || 'active',
+        progress: progress || 0,
         shareToken: generateShareToken(),
       },
     });

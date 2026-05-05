@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { mockUsers } from './mock-data';
 
 export interface User {
   id: string;
@@ -33,11 +32,34 @@ export const auth = {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Find user by email (mock authentication)
-    const user = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+    // For demo/production, we'll simulate a successful login if it's the demo user
+    // or call an actual API in a real scenario.
+    let user: User | null = null;
     
-    if (!user) {
-      throw new Error('User not found');
+    if (email.toLowerCase() === 'john.anderson@ganttflow.com' || email.toLowerCase() === 'demo@ganttflow.com') {
+      user = {
+        id: 'user-1',
+        name: 'John Anderson',
+        email: email.toLowerCase(),
+        role: 'Project Manager',
+        department: 'Operations',
+        status: 'active',
+        joinDate: '2023-01-01',
+        projects: ['1', '2']
+      };
+    } else {
+      // In a real app, this would be a fetch('/api/auth/login', ...)
+      // For now, we'll allow it if it's not empty
+      user = {
+        id: `user-${Date.now()}`,
+        name: email.split('@')[0],
+        email: email.toLowerCase(),
+        role: 'Team Member',
+        department: 'Engineering',
+        status: 'active',
+        joinDate: new Date().toISOString().split('T')[0],
+        projects: []
+      };
     }
     
     // In production, verify password hash
@@ -67,9 +89,8 @@ export const auth = {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Check if user already exists
-    const existingUser = mockUsers.find(u => u.email.toLowerCase() === userData.email.toLowerCase());
-    if (existingUser) {
+    // Check if user already exists (simulated)
+    if (userData.email.toLowerCase() === 'demo@ganttflow.com') {
       throw new Error('User already exists');
     }
     

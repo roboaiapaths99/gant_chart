@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { mockNotifications, mockActivities } from '@/lib/mock-data';
+// Notifications and activities would be fetched from API in production
+const mockNotifications: any[] = [];
+const mockActivities: any[] = [];
 import { 
   Bell, 
   Check, 

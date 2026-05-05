@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
-import { mockProjects, mockUsers, mockActivities } from '@/lib/mock-data';
+
 import { 
   Users, 
   Share2, 
@@ -24,9 +24,9 @@ import {
 } from 'lucide-react';
 
 export default function CollaborationPage() {
-  const [projects, setProjects] = useState(mockProjects);
-  const [users] = useState(mockUsers);
-  const [activities] = useState(mockActivities);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([]);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [shareLink, setShareLink] = useState('');
   const [isPublic, setIsPublic] = useState(false);
@@ -203,7 +203,7 @@ export default function CollaborationPage() {
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                         <span className="text-blue-600 font-medium">
-                          {user.name.split(' ').map(n => n[0]).join('')}
+                          {user.name.split(' ').map((n: string) => n[0]).join('')}
                         </span>
                       </div>
                       <div>

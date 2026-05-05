@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getResourceWorkload } from '@/lib/mock-data';
 
 export async function GET() {
   try {
@@ -55,11 +54,10 @@ export async function GET() {
     return NextResponse.json(resources);
   } catch (error) {
     console.error('Error fetching resource workload:', error);
-    
-    // Return comprehensive mock data
-    const fallbackResources = getResourceWorkload();
-
-    return NextResponse.json(fallbackResources);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch resource workload' },
+      { status: 500 }
+    );
   } finally {
     await prisma.$disconnect();
   }

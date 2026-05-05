@@ -20,46 +20,9 @@ import {
   X
 } from 'lucide-react';
 
-// Mock data for uploaded files
-const mockUploadedFiles = [
-  {
-    id: '1',
-    name: 'Q4_2024_Project_Timeline.xlsx',
-    size: '2.4 MB',
-    uploadedAt: '2024-01-15T10:30:00Z',
-    status: 'processed',
-    projectCreated: 'Bridge Construction',
-    tasksImported: 45,
-    resourcesIdentified: 8,
-    type: 'excel'
-  },
-  {
-    id: '2',
-    name: 'Construction_Budget_2024.csv',
-    size: '1.8 MB',
-    uploadedAt: '2024-01-14T14:22:00Z',
-    status: 'processed',
-    projectCreated: 'Highway Project',
-    tasksImported: 32,
-    resourcesIdentified: 6,
-    type: 'csv'
-  },
-  {
-    id: '3',
-    name: 'Site_Plan_Draft.xlsx',
-    size: '3.1 MB',
-    uploadedAt: '2024-01-13T09:15:00Z',
-    status: 'processing',
-    projectCreated: null,
-    tasksImported: null,
-    resourcesIdentified: null,
-    type: 'excel'
-  }
-];
-
 export default function UploadPage() {
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState(mockUploadedFiles);
+  const [uploadedFiles, setUploadedFiles] = useState<any[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);

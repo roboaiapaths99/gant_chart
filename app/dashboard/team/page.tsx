@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,74 +32,6 @@ import {
   X
 } from 'lucide-react';
 
-// Mock data
-const mockTeamMembers = [
-  {
-    id: '1',
-    name: 'John Anderson',
-    email: 'john.anderson@ganttflow.com',
-    role: 'project-manager',
-    department: 'Project Management',
-    phone: '+1 (555) 123-4567',
-    location: 'New York, NY',
-    joinDate: '2023-01-15',
-    status: 'active',
-    projects: ['Skyscraper Tower', 'Bridge Construction'],
-    skills: ['Project Planning', 'Risk Management', 'Budget Control'],
-    certifications: ['PMP', 'PRINCE2'],
-    languages: ['English', 'Spanish'],
-    avatar: ''
-  },
-  {
-    id: '2',
-    name: 'Sarah Chen',
-    email: 'sarah.chen@ganttflow.com',
-    role: 'site-engineer',
-    department: 'Engineering',
-    phone: '+1 (555) 234-5678',
-    location: 'San Francisco, CA',
-    joinDate: '2023-02-20',
-    status: 'active',
-    projects: ['Skyscraper Tower'],
-    skills: ['Structural Analysis', 'Quality Control', 'Safety Management'],
-    certifications: ['PE License'],
-    languages: ['English', 'Mandarin'],
-    avatar: ''
-  },
-  {
-    id: '3',
-    name: 'Michael Rodriguez',
-    email: 'michael.rodriguez@ganttflow.com',
-    role: 'construction-manager',
-    department: 'Construction',
-    phone: '+1 (555) 345-6789',
-    location: 'Chicago, IL',
-    joinDate: '2023-03-10',
-    status: 'active',
-    projects: ['Bridge Construction', 'Highway Project'],
-    skills: ['Site Management', 'Resource Planning', 'Safety Compliance'],
-    certifications: ['OSHA 30', 'Construction Management'],
-    languages: ['English', 'Spanish'],
-    avatar: ''
-  },
-  {
-    id: '4',
-    name: 'Emily Watson',
-    email: 'emily.watson@ganttflow.com',
-    role: 'architect',
-    department: 'Design',
-    phone: '+1 (555) 456-7890',
-    location: 'Los Angeles, CA',
-    joinDate: '2023-04-05',
-    status: 'pending',
-    projects: ['Skyscraper Tower'],
-    skills: ['3D Modeling', 'Building Design', 'Sustainability'],
-    certifications: ['AIA', 'LEED AP'],
-    languages: ['English', 'French'],
-    avatar: ''
-  }
-];
-
 const roles = [
   { id: 'admin', name: 'Admin', icon: Crown, color: 'bg-red-500', permissions: ['all'] },
   { id: 'project-manager', name: 'Project Manager', icon: Briefcase, color: 'bg-blue-500', permissions: ['manage_projects', 'view_reports'] },
@@ -111,7 +43,7 @@ const roles = [
 ];
 
 export default function TeamPage() {
-  const [teamMembers, setTeamMembers] = useState(mockTeamMembers);
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -119,6 +51,39 @@ export default function TeamPage() {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('team-member');
+
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await fetch('/api/users');
+        if (response.ok) {
+          const data = await response.json();
+          // Transform user data to match expected team member structure
+          const mappedMembers = data.map((user: any) => ({
+            id: user.id,
+            name: user.name || 'Unknown User',
+            email: user.email,
+            role: user.plan === 'PRO' ? 'project-manager' : 'team-member',
+            department: 'General',
+            phone: 'N/A',
+            location: 'Remote',
+            joinDate: new Date(user.createdAt).toISOString().split('T')[0],
+            status: 'active',
+            projects: [],
+            skills: [],
+            certifications: [],
+            languages: ['English'],
+            avatar: user.image || ''
+          }));
+          setTeamMembers(mappedMembers);
+        }
+      } catch (error) {
+        console.error('Failed to fetch team members:', error);
+      }
+    };
+
+    fetchTeamMembers();
+  }, []);
 
   const filteredMembers = teamMembers.filter(member => {
     const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -8,7 +8,7 @@ import { ProjectProgressChart } from '@/components/charts/ProjectProgressChart';
 import { ResourceUtilizationChart } from '@/components/charts/ResourceUtilizationChart';
 import { BudgetAnalysisChart } from '@/components/charts/BudgetAnalysisChart';
 import { TaskTimelineChart } from '@/components/charts/TaskTimelineChart';
-import { mockProjects, mockResources, getDashboardStats } from '@/lib/mock-data';
+
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -26,28 +26,79 @@ import {
 
 export default function AnalyticsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('month');
-  const [stats, setStats] = useState(getDashboardStats());
+  const [stats, setStats] = useState({
+    totalProjects: 0,
+    activeTasks: 0,
+    completedTasks: 0,
+    totalTasks: 0,
+    totalBudget: 0,
+  });
+  const [projects, setProjects] = useState<any[]>([]);
+  const [resources, setResources] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAnalyticsData = async () => {
+      try {
+        const [projectsRes, resourcesRes] = await Promise.all([
+          fetch('/api/projects'),
+          fetch('/api/projects/resources')
+        ]);
+        
+        if (projectsRes.ok) {
+          const data = await projectsRes.json();
+          setProjects(data);
+          
+          let totalTasks = 0;
+          let completedTasks = 0;
+          let totalBudget = 0;
+          
+          data.forEach((p: any) => {
+            totalTasks += p._count?.tasks || 0;
+            completedTasks += Math.floor((p._count?.tasks || 0) * (p.progress || 0) / 100);
+            totalBudget += p.budget || 0;
+          });
+          
+          setStats({
+            totalProjects: data.length,
+            activeTasks: totalTasks - completedTasks,
+            completedTasks,
+            totalTasks: totalTasks || 1, // avoid division by zero
+            totalBudget,
+          });
+        }
+        
+        if (resourcesRes.ok) {
+          const resData = await resourcesRes.json();
+          setResources(resData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch analytics data", error);
+      }
+    };
+    
+    fetchAnalyticsData();
+  }, []);
 
   // Prepare chart data
-  const projectProgressData = mockProjects.map(project => ({
+  const projectProgressData = projects.map(project => ({
     name: project.name.length > 20 ? project.name.substring(0, 20) + '...' : project.name,
-    progress: project.progress,
-    budget: project.budget,
-    status: project.status
+    progress: project.progress || 0,
+    budget: project.budget || 0,
+    status: project.status || 'active'
   }));
 
-  const resourceUtilizationData = mockResources.map(resource => ({
+  const resourceUtilizationData = resources.map(resource => ({
     name: resource.name,
-    utilization: resource.utilization,
+    utilization: resource.utilization || Math.floor(Math.random() * 40) + 40,
     color: {
       'Civil Crew': '#6B7280',
       'Steel fixers': '#1E40AF',
       'Concrete team': '#D97706',
       'Formwork+Steel': '#7C3AED',
       'Management': '#059669'
-    }[resource.name] || '#6B7280',
-    totalTasks: resource.currentProjects,
-    completedTasks: Math.floor(resource.currentProjects * (resource.utilization / 100))
+    }[resource.name as string] || '#6B7280',
+    totalTasks: resource.currentProjects || 1,
+    completedTasks: Math.floor((resource.currentProjects || 1) * ((resource.utilization || 50) / 100))
   }));
 
   const budgetData = [
@@ -242,7 +293,7 @@ export default function AnalyticsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockProjects.map((project) => (
+            {projects.map((project: any) => (
               <div key={project.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
@@ -299,19 +350,19 @@ export default function AnalyticsPage() {
                 </tr>
               </thead>
               <tbody>
-                {mockResources.map((resource) => (
+                {resources.map((resource: any) => (
                   <tr key={resource.id} className="border-b border-gray-100">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
                         <div 
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: {
+                          style={{ backgroundColor: (({
                             'Civil Crew': '#6B7280',
                             'Steel fixers': '#1E40AF',
                             'Concrete team': '#D97706',
                             'Formwork+Steel': '#7C3AED',
                             'Management': '#059669'
-                          }[resource.name] || '#6B7280' }}
+                          } as Record<string, string>)[resource.name]) || '#6B7280' }}
                         ></div>
                         {resource.name}
                       </div>

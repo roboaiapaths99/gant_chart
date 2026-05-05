@@ -325,11 +325,10 @@ export default function BillingPage() {
                         ))}
                       </div>
                       <Button 
-                        className="w-full" 
                         variant={isCurrentPlan ? 'outline' : 'default'}
                         onClick={() => handleUpgradePlan(plan.id)}
                         disabled={isCurrentPlan}
-                        className={!isCurrentPlan ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:shadow-xl transition-all shadow-lg shadow-purple-500/30' : 'bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200/50 hover:shadow-lg transition-all'}
+                        className={`w-full ${!isCurrentPlan ? 'bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 hover:shadow-xl transition-all shadow-lg shadow-purple-500/30' : 'bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200/50 hover:shadow-lg transition-all'}`}
                       >
                         {isCurrentPlan ? 'Current Plan' : billingInterval === 'year' ? 'Upgrade Annual' : 'Upgrade Plan'}
                       </Button>

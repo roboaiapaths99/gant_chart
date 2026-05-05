@@ -48,74 +48,22 @@ interface Report {
   fileSize: string;
 }
 
-// Mock data
-const mockReports: Report[] = [
-  {
-    id: '1',
-    name: 'Q4 2024 Progress Report',
-    type: 'progress',
-    generatedAt: '2024-01-15T10:30:00Z',
-    status: 'completed',
-    summary: {
-      overallProgress: 78,
-      tasksCompleted: 145,
-      tasksInProgress: 42,
-      budgetUsed: 68,
-      issues: 2
-    },
-    fileUrl: '/reports/q4-2024-progress.pdf',
-    fileSize: '2.4 MB'
-  },
-  {
-    id: '2',
-    name: 'Financial Analysis 2024',
-    type: 'financial',
-    generatedAt: '2024-01-14T14:22:00Z',
-    status: 'completed',
-    summary: {
-      overallProgress: 82,
-      tasksCompleted: 168,
-      tasksInProgress: 38,
-      budgetUsed: 71,
-      issues: 1
-    },
-    fileUrl: '/reports/financial-analysis-2024.xlsx',
-    fileSize: '1.8 MB'
-  },
-  {
-    id: '3',
-    name: 'Resource Utilization Report',
-    type: 'resource',
-    generatedAt: '2024-01-13T09:15:00Z',
-    status: 'completed',
-    summary: {
-      overallProgress: 75,
-      tasksCompleted: 132,
-      tasksInProgress: 51,
-      budgetUsed: 65,
-      issues: 3
-    },
-    fileUrl: '/reports/resource-utilization.pdf',
-    fileSize: '3.1 MB'
-  }
-];
-
 const reportTypes = [
-  { id: 'progress', name: 'Progress Report', icon: BarChart3, description: 'Project progress and milestones' },
-  { id: 'financial', name: 'Financial Report', icon: DollarSign, description: 'Budget and cost analysis' },
-  { id: 'resource', name: 'Resource Report', icon: Users, description: 'Team workload and availability' },
-  { id: 'timeline', name: 'Timeline Report', icon: Clock, description: 'Project schedules and deadlines' },
-  { id: 'risk', name: 'Risk Assessment', icon: TrendingUp, description: 'Project risks and mitigation' }
+  { id: 'progress', name: 'Project Progress', icon: BarChart3, description: 'Track overall project completion and task status' },
+  { id: 'budget', name: 'Budget Analysis', icon: DollarSign, description: 'Analyze spending, forecasts, and cost variances' },
+  { id: 'resource', name: 'Resource Allocation', icon: Users, description: 'Monitor team workload and utilization rates' },
+  { id: 'timeline', name: 'Schedule & Timeline', icon: Calendar, description: 'Detailed view of milestones and deadline tracking' },
+  { id: 'executive', name: 'Executive Summary', icon: TrendingUp, description: 'High-level overview for stakeholders' }
 ];
 
 const exportFormats = [
-  { id: 'pdf', name: 'PDF', icon: FileText, description: 'Best for sharing and printing' },
-  { id: 'excel', name: 'Excel', icon: FileSpreadsheet, description: 'For data analysis' },
-  { id: 'png', name: 'PNG', icon: FileImage, description: 'For presentations' }
+  { id: 'pdf', name: 'PDF Document', icon: FileText, extension: '.pdf' },
+  { id: 'excel', name: 'Excel Spreadsheet', icon: FileSpreadsheet, extension: '.xlsx' },
+  { id: 'image', name: 'High-Res Image', icon: FileImage, extension: '.png' }
 ];
 
 export default function ReportsPage() {
-  const [reports, setReports] = useState(mockReports);
+  const [reports, setReports] = useState<Report[]>([]);
   const [selectedReportType, setSelectedReportType] = useState('progress');
   const [dateRange, setDateRange] = useState('month');
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);

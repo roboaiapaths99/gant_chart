@@ -168,7 +168,7 @@ export default function DashboardPage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">Welcome back!</h1>
-              <p className="text-gray-600 mt-2 text-lg">Here's what's happening with your projects</p>
+              <p className="text-gray-600 mt-2 text-lg">Here&apos;s what&apos;s happening with your projects</p>
             </div>
             <div className="flex items-center gap-4">
               <Button variant="outline" size="sm" className="bg-white/80 backdrop-blur-xl border-gray-200/50 shadow-lg hover:shadow-xl transition-all">
