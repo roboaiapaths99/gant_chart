@@ -46,30 +46,33 @@ export default function AnalyticsPage() {
         
         if (projectsRes.ok) {
           const data = await projectsRes.json();
-          setProjects(data);
-          
-          let totalTasks = 0;
-          let completedTasks = 0;
-          let totalBudget = 0;
-          
-          data.forEach((p: any) => {
-            totalTasks += p._count?.tasks || 0;
-            completedTasks += Math.floor((p._count?.tasks || 0) * (p.progress || 0) / 100);
-            totalBudget += p.budget || 0;
-          });
-          
-          setStats({
-            totalProjects: data.length,
-            activeTasks: totalTasks - completedTasks,
-            completedTasks,
-            totalTasks: totalTasks || 1, // avoid division by zero
-            totalBudget,
-          });
+          if (data.success && Array.isArray(data.projects)) {
+            const projectsArray = data.projects;
+            setProjects(projectsArray);
+            
+            let totalTasks = 0;
+            let completedTasks = 0;
+            let totalBudget = 0;
+            
+            projectsArray.forEach((p: any) => {
+              totalTasks += p._count?.tasks || 0;
+              completedTasks += Math.floor((p._count?.tasks || 0) * (p.progress || 0) / 100);
+              totalBudget += p.budget || 0;
+            });
+            
+            setStats({
+              totalProjects: projectsArray.length,
+              activeTasks: totalTasks - completedTasks,
+              completedTasks,
+              totalTasks: totalTasks || 1, // avoid division by zero
+              totalBudget,
+            });
+          }
         }
         
         if (resourcesRes.ok) {
           const resData = await resourcesRes.json();
-          setResources(resData);
+          setResources(Array.isArray(resData) ? resData : []);
         }
       } catch (error) {
         console.error("Failed to fetch analytics data", error);
