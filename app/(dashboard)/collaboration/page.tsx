@@ -33,6 +33,35 @@ export default function CollaborationPage() {
   const [origin, setOrigin] = useState('');
 
   useEffect(() => {
+    const fetchCollaborationData = async () => {
+      try {
+        const [projectsRes, usersRes] = await Promise.all([
+          fetch('/api/projects'),
+          fetch('/api/users')
+        ]);
+        
+        if (projectsRes.ok) {
+          const data = await projectsRes.json();
+          if (data.success) {
+            setProjects(data.projects || []);
+          }
+        }
+        
+        if (usersRes.ok) {
+          const data = await usersRes.json();
+          if (data.success) {
+            setUsers(data.users || []);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch collaboration data", error);
+      }
+    };
+    
+    fetchCollaborationData();
+  }, []);
+
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       setOrigin(window.location.origin);
     }
